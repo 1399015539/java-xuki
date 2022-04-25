@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zsy.xuki.mapper.StoreMapper" >
+  <resultMap id="BaseResultMap" type="com.zsy.xuki.entity.Store" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="literature_id" property="literatureId" jdbcType="INTEGER" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from store
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zsy.xuki.entity.Store" >
+    insert into store (id, user_id, literature_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{literatureId,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.zsy.xuki.entity.Store" >
+    update store
+    set user_id = #{userId,jdbcType=INTEGER},
+      literature_id = #{literatureId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, user_id, literature_id
+    from store
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="Map" >
+    select id, user_id, literature_id
+    from store
+    <where>
+      <if test="name != null">
+        and user_id like '%${name}%'
+      </if>
+      <if test="offset != null and pageSize != null">
+        limit #{offset},#{pageSize}
+      </if>
+    </where>
+  </select>
+  <!-- 获取符合结果的总记录数 -->
+  <select id="getTotal" parameterType="Map" resultType="Integer">
+    select count(*) from store
+    <where>
+      <if test="name != null">
+        and user_id like '%${name}%'
+      </if>
+      <if test="literatureId != null">
+        and literature_id like '%${literatureId}%'
+      </if>
+    </where>
+  </select>
+</mapper>

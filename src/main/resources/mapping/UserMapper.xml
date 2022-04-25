@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zsy.xuki.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.zsy.xuki.entity.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="role" property="role" jdbcType="SMALLINT" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zsy.xuki.entity.User" >
+    insert into user (id, name, password,
+      email, phone, role, sex
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{role,jdbcType=SMALLINT}, #{sex,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.zsy.xuki.entity.User" >
+    update user
+    set name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      role = #{role,jdbcType=SMALLINT},
+      sex = #{sex,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, name, password, email, phone, role, sex
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, name, password, email, phone, role, sex
+    from user
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="Map">
+    select id, name, password, email, phone, role, sex
+    from user where 1 = 1
+    <if test="name != null">
+      and name like '%${name}%'
+    </if>
+    <if test="offset != null and pageSize != null">
+      limit #{offset},#{pageSize}
+    </if>
+  </select>
+  <select id="likeSearch" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select id, name, password, email, phone, role, sex
+    from user
+    where name like "%"#{name,jdbcType=VARCHAR}"%"
+  </select>
+  <!-- 获取符合结果的总记录数 -->
+  <select id="getTotal" parameterType="Map" resultType="Integer">
+    select count(*) from user where 1 = 1
+    <if test="name != null">
+      and name like '%${name}%'
+    </if>
+  </select>
+</mapper>
